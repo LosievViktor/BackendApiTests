@@ -1,4 +1,5 @@
 ﻿using BackendApiTests.Microservices;
+using BackendApiTests.Utilities;
 using Refit;
 
 namespace BackendApiTests.Tests
@@ -12,12 +13,16 @@ namespace BackendApiTests.Tests
         [OneTimeSetUp]
         public void OneTimeSetup()
         {
-            var settings = new RefitSettings
+            var httpClient = new HttpClient( new HttpLoggingHandler
             {
-                ContentSerializer = new SystemTextJsonContentSerializer()
+               InnerHandler = new HttpClientHandler()
+            })
+            {
+                BaseAddress = new System.Uri(TestContext.Parameters["Environment"] ?? _baseUrl)
             };
 
-            _api = RestService.For<IObjects>(TestContext.Parameters["Environment"] ?? _baseUrl, settings);
+            _api = RestService.For<IObjects>(httpClient);
+          
         }
     }
 }

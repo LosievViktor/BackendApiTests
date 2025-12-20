@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using System.Net;
+﻿using System.Net;
 
 namespace BackendApiTests.Tests
 {
@@ -12,11 +11,13 @@ namespace BackendApiTests.Tests
         {
             var response = await _api.GetObjects();
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            response.Content.Should().NotBeNull();
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK),
+                "Check that response Status Code is 200 OK.");
 
-            response.Content.Should().NotBeEmpty();
-            response.Content.Should().OnlyContain(x => !string.IsNullOrWhiteSpace(x.Id) && !string.IsNullOrWhiteSpace(x.Name));
+            var result = response.Content.All(x => !string.IsNullOrWhiteSpace(x.Id) && !string.IsNullOrWhiteSpace(x.Name));
+
+            Assert.That(result, Is.True,
+                "Check that all objects should have non-empty Id and Name.");
         }
 
         [Test]
@@ -27,27 +28,33 @@ namespace BackendApiTests.Tests
 
             var response = await _api.GetObjectsByIds(ids);
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            response.Content.Should().NotBeNull();
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK),
+                "Check that response Status Code is 200 OK.");
 
-            response.Content.Should().NotBeEmpty();
-            response.Content.Should().OnlyContain(x => !string.IsNullOrWhiteSpace(x.Id) && !string.IsNullOrWhiteSpace(x.Name));
+            var result = response.Content.All(x => !string.IsNullOrWhiteSpace(x.Id) && !string.IsNullOrWhiteSpace(x.Name));
 
-            response.Content.Select(x => x.Id).Should().BeEquivalentTo(ids);
+            Assert.That(result, Is.True,
+                "Check that all objects should have non-empty Id and Name.");
+
+            var returnedIds = response.Content.Select(x => x.Id).ToArray();
+
+            Assert.That(returnedIds, Is.EquivalentTo(ids),
+                "Check that response contain items with id 3, 5, 10.");
         }
-
 
         [Test]
         [Description("Check that /objects api returns object by id.")]
         public async Task GetObjectsByIdTest()
         {
-            var id = "3"; ;
+            var id = "3";
 
             var response = await _api.GetObjectById(id);
 
-            response.IsSuccessStatusCode.Should().BeTrue();
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            response.Content.Id.Should().Be(id);
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK),
+                "Check that responce Status Code is 200 OK.");
+
+            Assert.That(response.Content.Id, Is.EqualTo(id),
+                $"Check that response contain item with id {id}.");
         }
 
         [Test]
@@ -55,7 +62,9 @@ namespace BackendApiTests.Tests
         public async Task Return404Test()
         {
             var response = await _api.GetObjectById("blablalba");
-            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound),
+                "Check that responce Status Code is 404 NotFound.");
         }
     }
 }

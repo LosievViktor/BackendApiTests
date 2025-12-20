@@ -1,6 +1,4 @@
 ﻿using BackendApiTests.Models;
-using FluentAssertions;
-using FluentAssertions.Execution;
 using System.Net;
 
 namespace BackendApiTests.Tests
@@ -19,8 +17,7 @@ namespace BackendApiTests.Tests
                 Data = new()
                 {
                     ["year"] = 2022,
-                    ["price"] = 11,
-
+                    ["price"] = 11
                 }
             };
 
@@ -33,38 +30,39 @@ namespace BackendApiTests.Tests
         [Description("Check PUT request on /objects api.")]
         public async Task PutObjectTest()
         {
-
-            var objectId = _id;
-
             var request = new PutObjectRequest
             {
                 Name = "Apple Apple Apple Apple",
                 Data = new()
                 {
                     ["year"] = 2222,
-                    ["price"] = 2000,
+                    ["price"] = 2000
                 }
             };
 
+            var response = await _api.UpdateObject(_id, request);
 
-            var response = await _api.UpdateObject(objectId, request);
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK),
+                "Check that response Status Code is 200 OK.");
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            Assert.That(response.Content.Id, Is.EqualTo(_id),
+                "Check that response Id is correct.");
 
-            using (new AssertionScope())
-            {
-                response.Content.Id.Should().Be(objectId);
-                response.Content.Name.Should().Be(request.Name);
-                response.Content.Data.Should().BeEquivalentTo(request.Data);
+            Assert.That(response.Content.Name, Is.EqualTo(request.Name),
+                "Check that response Name is correct.");
 
-            }
+            Assert.That(response.Content.Data["year"], Is.EqualTo(2222),
+                 "Response year data is correct.");
+
+            Assert.That(response.Content.Data["price"], Is.EqualTo(2000),
+                 "Response price data is correct.");
+
         }
 
         [Test]
         [Description("Check PATCH request on /objects api.")]
         public async Task PatchObjectTest()
         {
-            var objectId = _id;
             var newName = "Apple (Updated Name)";
 
             var request = new PatchObjectRequest
@@ -72,25 +70,22 @@ namespace BackendApiTests.Tests
                 Name = newName
             };
 
+            var response = await _api.PatchObject(_id, request);
 
-            var response = await _api.PatchObject(objectId, request);
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK),
+                "Check that response Status Code is 200 OK.");
 
-            response.IsSuccessStatusCode.Should().BeTrue();
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            Assert.That(response.Content.Id, Is.EqualTo(_id),
+                "Check that response Id is correct.");
 
-            using (new AssertionScope())
-            {
-                response.Content.Id.Should().Be(objectId);
-                response.Content.Name.Should().Be(newName);
-
-            }
+            Assert.That(response.Content.Name, Is.EqualTo(newName),
+                "Check that response Name is correct.");
         }
-
 
         [TearDown]
         public async Task TearDown()
         {
-            var response1 = await _api.DeleteObject(_id);
+            await _api.DeleteObject(_id);
         }
     }
 }
