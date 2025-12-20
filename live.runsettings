@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <!-- Parameters available to tests via TestContext -->
+  <TestRunParameters>
+    <Parameter name="Environment" value="https://api.restful-api.dev" />
+  </TestRunParameters>
+</RunSettings>
