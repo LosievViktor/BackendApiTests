@@ -1,5 +1,6 @@
 # BackendApiTests
-C# code examples for Backed API automation tests maded with Refit library.
+
+C# code examples for Backed API automation tests made with Refit library.
 
 Stack: C#, NUnit, Refit.
 
