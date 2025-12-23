@@ -8,7 +8,6 @@ namespace BackendApiTests.Tests
     public class BaseTest
     {
         public IObjects _api;
-        public string _baseUrl = "https://api.restful-api.dev";
 
         [OneTimeSetUp]
         public void OneTimeSetup()
@@ -18,7 +17,7 @@ namespace BackendApiTests.Tests
                InnerHandler = new HttpClientHandler()
             })
             {
-                BaseAddress = new System.Uri(TestContext.Parameters["Environment"] ?? _baseUrl)
+                BaseAddress = new System.Uri(TestContext.Parameters["Environment"])
             };
 
             _api = RestService.For<IObjects>(httpClient);
