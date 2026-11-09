@@ -25,7 +25,7 @@ public class DeleteBookTests : BooksApiTestBase
         var response = await Client.DeleteBookAsync(9999);
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound),
-            "Check that that response status is NotFound 404 for delete request with unreal book id.");
+            "Check that deleting a book with a non-existent id returns 404 Not Found.");
     }
 
     [Test]
@@ -40,6 +40,6 @@ public class DeleteBookTests : BooksApiTestBase
         Assert.That(
             ids,
             Is.EquivalentTo(new[] { 1, 3 }),
-            "Check that response contains only books with Id's  1 and 3 and deleted book is not in response.");
+            "Check that the remaining book ids are exactly 1 and 3.");
     }
 }

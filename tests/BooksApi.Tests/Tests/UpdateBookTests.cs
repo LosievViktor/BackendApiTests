@@ -37,7 +37,7 @@ public class UpdateBookTests : BooksApiTestBase
         var getResponse = await Client.GetBookByIdAsync(1);
         
         Assert.That(getResponse.Content!.Title, Is.EqualTo(request.Title),
-            "Check that the updated book title is persisted and returned by the API.");
+            "Check that the title in request is the same as in response.");
     }
 
     [Test]
@@ -55,7 +55,7 @@ public class UpdateBookTests : BooksApiTestBase
         var response = await Client.UpdateBookAsync(9999, request);
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound),
-            "Check that request with unreal id e will have Not Found 404 Status Code.");
+            "Check that updating a book with a non-existent id returns 404 Not Found.");
     }
 
     [Test]
@@ -73,6 +73,6 @@ public class UpdateBookTests : BooksApiTestBase
         var response = await Client.UpdateBookAsync(1, request);
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest),
-            "Check that update request with null tittle will have Bad Request 400 Status Code.");
+            "Check that an update request with an empty title returns 400 Bad Request.");
     }
 }

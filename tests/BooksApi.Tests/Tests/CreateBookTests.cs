@@ -26,19 +26,19 @@ public class CreateBookTests : BooksApiTestBase
             "Check that Status Code is Created 201.");
         
         Assert.That(response.Content, Is.Not.Null,
-            "Check that response is not Null.");
+            "Check that the response content is not null.");
         
         Assert.That(response.Content!.Id, Is.GreaterThan(0),
             "Check that Id is greater than zero.");
         
         Assert.That(response.Content!.Title, Is.EqualTo(request.Title),
-            "Check  that  request Title is equal to response Title.");
+            "Check that the response title equals the request title.");
         
         Assert.That(response.Content!.Isbn, Is.EqualTo(request.Isbn),
-            "Check that request ISBN is equal to response ISBN.");
+            "Check that the response ISBN equals the request ISBN.");
         
         Assert.That(response.Headers.Location, Is.Not.Null,
-            "Check that headers Location is not null.");
+            "Check that the Location header is not null.");
     }
 
     [Test]
@@ -56,7 +56,7 @@ public class CreateBookTests : BooksApiTestBase
         var response = await Client.CreateBookAsync(request);
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest),
-            "Check that server can handle request without Title with BadRequest 400 status code.");
+            "Check that creating a book with an empty title returns 400 Bad Request.");
     }
 
     [Test]
@@ -74,7 +74,7 @@ public class CreateBookTests : BooksApiTestBase
         var response = await Client.CreateBookAsync(request);
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest),
-            "Check that server can handle request with negative Published Year with BadRequest 400 status code.");
+            "Check that creating a book with a negative published year returns 400 Bad Request.");
     }
 
     [Test]
@@ -95,9 +95,9 @@ public class CreateBookTests : BooksApiTestBase
         var getResponse = await Client.GetBookByIdAsync(newId);
 
         Assert.That(getResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK),
-            "Check that response for Create book resuqest have 200 OK Status Code.");
+            "Check that GET of the created book returns 200 OK.");
         
         Assert.That(getResponse.Content!.Title, Is.EqualTo(request.Title),
-            "Check that Title in request is equal to response Title.");
+            "Check that the title returned by GET equals the title from the create request.");
     }
 }

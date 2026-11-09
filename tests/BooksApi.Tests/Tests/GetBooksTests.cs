@@ -52,6 +52,6 @@ public class GetBooksTests : BooksApiTestBase
         var response = await Client.GetBookByIdAsync(9999);
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound),
-            "Check that for request with unreal book id, response will be with NotFound 404 Status Code.");
+            "Check that a request for a non-existent book id returns 404 Not Found.");
     }
 }
